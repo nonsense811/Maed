@@ -157,24 +157,25 @@
 
 <script>
 /* ───────── إعدادات العداد اليدوي ───────── */
-const CURRENT_FOLLOWERS = 10; // <--- غير الرقم ده يدوي هنا (مليون حالياً)
+const CURRENT_FOLLOWERS = 10; 
 /* ─────────────────────────────────── */
 
 const CONFIG = {
+  // التعديل هنا: زودنا خانة date لكل رسالة
   milestones: [
-    { count: 1, label: '1 Follower', msg: '“Every story starts with one… and this is the first step of your comeback.”' },
-    { count: 5, label: '5 Followers', msg: '“Five souls found their way back to you… the light is returning.”' },
-    { count: 10, label: '10 Followers', msg: '“Ten hearts chose your new beginning. This is where the momentum starts.”' },
-    { count: 50, label: '50 Followers', msg: '“Fifty people already believe in the new you… and this is only the start.”' },
-    { count: 100, label: '100 Followers', msg: '“A hundred eyes watching you rise again. Your glow is impossible to ignore.”' },
-    { count: 500, label: '500 Followers', msg: '“Five hundred steps toward the life you’re rebuilding… and it’s beautiful.”' },
-    { count: 1000, label: '1,000 Followers', msg: '“A thousand voices gathering around your rebirth. Your energy is magnetic.”' },
-    { count: 5000, label: '5,000 Followers', msg: '“Five thousand hearts pulled by your presence… your world is expanding again.”' },
-    { count: 10000, label: '10,000 Followers', msg: '“Ten thousand people witnessing your comeback story. Your power is undeniable.”' },
-    { count: 50000, label: '50,000 Followers', msg: '“Fifty thousand souls orbiting your universe… your rise is unstoppable.”' },
-    { count: 100000, label: '100,000 Followers', msg: '“A hundred thousand people choosing your world again. You were never gone.”' },
-    { count: 500000, label: '500,000 Followers', msg: '“Half a million hearts drawn to your light. This is the era of your growth.”' },
-    { count: 1000000, label: '1,000,000 Followers', msg: '“A million people in your world… but you shine exactly the same way you did when it was only one.”' }
+    { count: 1, label: '1 Follower', msg: '“Every story starts with one… and this is the first step of your comeback.”', date: '01/04/2026' },
+    { count: 5, label: '5 Followers', msg: '“Five souls found their way back to you… the light is returning.”', date: '01/04/2026' },
+    { count: 10, label: '10 Followers', msg: '“Ten hearts chose your new beginning. This is where the momentum starts.”', date: '01/04/2026' },
+    { count: 50, label: '50 Followers', msg: '“Fifty people already believe in the new you… and this is only the start.”', date: '05/04/2026' },
+    { count: 100, label: '100 Followers', msg: '“A hundred eyes watching you rise again. Your glow is impossible to ignore.”', date: '10/04/2026' },
+    { count: 500, label: '500 Followers', msg: '“Five hundred steps toward the life you’re rebuilding… and it’s beautiful.”', date: '15/04/2026' },
+    { count: 1000, label: '1,000 Followers', msg: '“A thousand voices gathering around your rebirth. Your energy is magnetic.”', date: '20/04/2026' },
+    { count: 5000, label: '5,000 Followers', msg: '“Five thousand hearts pulled by your presence… your world is expanding again.”', date: '25/04/2026' },
+    { count: 10000, label: '10,000 Followers', msg: '“Ten thousand people witnessing your comeback story. Your power is undeniable.”', date: '30/04/2026' },
+    { count: 50000, label: '50,000 Followers', msg: '“Fifty thousand souls orbiting your universe… your rise is unstoppable.”', date: '05/05/2026' },
+    { count: 100000, label: '100,000 Followers', msg: '“A hundred thousand people choosing your world again. You were never gone.”', date: '15/05/2026' },
+    { count: 500000, label: '500,000 Followers', msg: '“Half a million hearts drawn to your light. This is the era of your growth.”', date: '01/06/2026' },
+    { count: 1000000, label: '1,000,000 Followers', msg: '“A million people in your world… but you shine exactly the same way you did when it was only one.”', date: '01/07/2026' }
   ]
 };
 
@@ -192,7 +193,6 @@ const DOM = {
   music: document.getElementById('bgMusic')
 };
 
-// Canvas & Graphics logic (Stays exactly as your version)
 const bgCanvas = document.getElementById('bgCanvas'); const bgCtx = bgCanvas.getContext('2d');
 const petalCanvas = document.getElementById('petalCanvas'); const pCtx = petalCanvas.getContext('2d');
 function resize() { bgCanvas.width = petalCanvas.width = window.innerWidth; bgCanvas.height = petalCanvas.height = window.innerHeight; }
@@ -202,7 +202,6 @@ drawBg();
 function animatePetals() { pCtx.clearRect(0,0,petalCanvas.width, petalCanvas.height); if(petalsActive) { if(petals.length < 50 && Math.random() < 0.1) petals.push({x: Math.random()*petalCanvas.width, y: -20, size: 5+Math.random()*10, vy: 1+Math.random()*1.5, vx: (Math.random()-0.5)*1, rot: Math.random()*Math.PI*2, rs: (Math.random()-0.5)*0.02, sway: Math.random()*Math.PI*2}); petals.forEach(p => { p.y += p.vy; p.x += p.vx + Math.sin(p.sway)*0.5; p.sway += 0.02; p.rot += p.rs; pCtx.save(); pCtx.translate(p.x, p.y); pCtx.rotate(p.rot); pCtx.fillStyle = 'rgba(200,170,255,0.4)'; pCtx.beginPath(); pCtx.ellipse(0,0,p.size/2, p.size, 0,0,Math.PI*2); pCtx.fill(); pCtx.restore(); }); petals = petals.filter(p => p.y < petalCanvas.height+20); } requestAnimationFrame(animatePetals); }
 animatePetals();
 
-// Navigation
 function nextScene() {
   document.getElementById(`scene${currentScene}`).classList.remove('active');
   currentScene++;
@@ -217,10 +216,9 @@ function nextScene() {
   }, 400);
 }
 
-// ───────── الميكانيكا اليدوية الجديدة ─────────
 function runManualCounter(target) {
   let start = 0;
-  let duration = target > 1000 ? 3000 : 1500; // وقت العد
+  let duration = target > 1000 ? 3000 : 1500;
   let startTime = performance.now();
 
   function tick(now) {
@@ -229,7 +227,6 @@ function runManualCounter(target) {
     displayCount = Math.round(start + (target - start) * ease);
     DOM.counter.textContent = displayCount.toLocaleString();
     
-    // فحص الرسايل أثناء العد
     CONFIG.milestones.forEach(m => {
       if(displayCount >= m.count && !unlockedMilestones.has(m.count)) {
         unlockMilestone(m);
@@ -244,7 +241,8 @@ function runManualCounter(target) {
 
 function unlockMilestone(m) {
   unlockedMilestones.add(m.count);
-  let entry = { label: m.label, msg: m.msg, date: new Date().toLocaleDateString() };
+  // التعديل هنا: ياخد التاريخ من m.date اليدوي اللي فوق
+  let entry = { label: m.label, msg: m.msg, date: m.date };
   archive.push(entry);
   achievementQueue.push(entry);
   if(!achievementShowing) processQueue();
@@ -255,7 +253,6 @@ function updateFinalUI(n) {
   let next = CONFIG.milestones.find(m => m.count > n);
   DOM.milestone.textContent = next ? `Next Milestone: ${next.label}` : "Legacy Complete";
 }
-// ──────────────────────────────────────────────
 
 function processQueue() {
   if(achievementQueue.length === 0) { achievementShowing = false; return; }
@@ -265,7 +262,7 @@ function processQueue() {
 function closeAchievement() { DOM.overlay.classList.remove('show'); setTimeout(processQueue, 600); }
 function openArchive() {
   DOM.archiveList.innerHTML = '';
-  archive.forEach(e => { DOM.archiveList.innerHTML += `<div class="archive-entry"><div style="color:var(--gold); font-size:0.6rem; letter-spacing:0.3em;">${e.label}</div><div style="font-size:1rem; margin:8px 0; font-style:italic;">${e.msg}</div><div style="font-size:0.55rem; opacity:0.3;">${e.date}</div></div>`; });
+  archive.forEach(e => { DOM.archiveList.innerHTML += `<div class="archive-entry"><div style="color:var(--gold); font-size:0.6rem; letter-spacing:0.3em;">${e.label}</div><div style="font-size:1rem; margin:8px 0; font-style:italic;">${e.msg}</div><div style="font-size:0.55rem; opacity:0.3;">Unlocked on: ${e.date}</div></div>`; });
   document.getElementById('archivePanel').classList.add('open');
 }
 function closeArchive() { document.getElementById('archivePanel').classList.remove('open'); }
